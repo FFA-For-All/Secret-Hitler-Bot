@@ -9,6 +9,9 @@ Created on Wed Sep 11 21:13:41 2019
 
 import os
 
+import nest_asyncio
+nest_asyncio.apply()
+
 import discord
 from dotenv import load_dotenv
 
