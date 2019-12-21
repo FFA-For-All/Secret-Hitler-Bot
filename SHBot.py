@@ -15,14 +15,19 @@ import nest_asyncio
 nest_asyncio.apply()
 
 import discord
+from discord.ext import commands
+
 from dotenv import load_dotenv
 
 import images as img
 
+
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client()
+#command prefix
+client = commands.Bot(command_prefix='$')
+
 
 #Randomize list of roles
 roles_five_player = ['liberal', 'liberal', 'liberal', 'fascist', 'hitler']
@@ -38,28 +43,22 @@ player5 = roles_five_player[4]
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
-    
-@client.event
-async def on_message(message):
-    #Making sure bot doesn't respond to itself
-    if message.author == client.user:
-        return
-    #Embed with text + image for ja and nein votes
-    #Need to still have this sent back & forth between messages
-    if message.content.startswith('$ja'):
-        embed = discord.Embed(title="You have voted Ja!")
-        embed.set_image(url=img.imageURL_vote_ja)
-        await message.channel.send(embed = embed)
-        
-    if message.content.startswith('$nein'):
-        embed = discord.Embed(title="You have voted Nein!")
-        embed.set_image(url=img.imageURL_vote_nein)
-        await message.channel.send(embed = embed)
-       
-    if message.content.startswith('$role'):
-        embed = discord.Embed(title="Your role for this game is:")
-        embed.set_image(url=random.choice([img.imageURL_role_hitler,img.imageURL_role_fascist,img.imageURL_role_liberal]))
-        await message.channel.send(embed = embed)
+  
+ #Receiving a private message confirmation of your ja vote    
+@client.command()
+async def ja(ctx):
+    embed = discord.Embed(title="You have voted Ja!")
+    embed.set_image(url=img.imageURL_vote_ja)
+    await ctx.author.send(embed = embed)
+
+#Receiving a private message confirmation of your nein vote    
+@client.command()
+async def nein(ctx):
+    embed = discord.Embed(title="You have voted Nein!")
+    embed.set_image(url=img.imageURL_vote_nein)
+    await ctx.author.send(embed = embed) 
+
+      
         
       
 
